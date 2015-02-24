@@ -77,7 +77,7 @@ _begintime = time;
 									_lootspawned = true;
 									//special for weapons
 									if(_lootType == 1) exitWith {
-										_lootholder = createVehicle ["GroundWeaponHolder", _tmpPos, [], 0, "CAN_COLLIDE"];
+										_lootholder = createVehicle ["WeaponHolderSimulated", _tmpPos, [], 0, "CAN_COLLIDE"];
 										_selecteditem = (floor(random(count((lootWeapon_list select _lootClass) select 1))));
 										_loot = (((lootWeapon_list select _lootClass) select 1) select _selecteditem);
 										_lootholder addWeaponCargoGlobal [_loot, 1];
@@ -86,7 +86,7 @@ _begintime = time;
 									};
 									//special for magazines: spawn 1-6
 									if(_lootType == 2) exitWith {
-										_lootholder = createVehicle ["GroundWeaponHolder", _tmpPos, [], 0, "CAN_COLLIDE"];
+										_lootholder = createVehicle ["WeaponHolderSimulated", _tmpPos, [], 0, "CAN_COLLIDE"];
 										_randChance = 1 + floor(random(5));
 										for "_rm" from 0 to _randChance do {
 											_selecteditem = (floor(random(count((lootMagazine_list select _lootClass) select 1))));
@@ -98,7 +98,7 @@ _begintime = time;
 									};
 									//special for item/cloth/vests
 									if(_lootType == 3) exitWith {
-										_lootholder = createVehicle ["GroundWeaponHolder", _tmpPos, [], 0, "CAN_COLLIDE"];
+										_lootholder = createVehicle ["WeaponHolderSimulated", _tmpPos, [], 0, "CAN_COLLIDE"];
 										_selecteditem = (floor(random(count((lootItem_list select _lootClass) select 1))));
 										_loot = (((lootItem_list select _lootClass) select 1) select _selecteditem);
 										_lootholder addItemCargoGlobal [_loot, 1];
@@ -107,7 +107,7 @@ _begintime = time;
 									};
 									//special for backpacks
 									if(_lootType == 4) exitWith {
-										_lootholder = createVehicle ["GroundWeaponHolder", _tmpPos, [], 0, "CAN_COLLIDE"];
+										_lootholder = createVehicle ["WeaponHolderSimulated", _tmpPos, [], 0, "CAN_COLLIDE"];
 										_selecteditem = (floor(random(count((lootBackpack_list select _lootClass) select 1))));
 										_loot = (((lootBackpack_list select _lootClass) select 1) select _selecteditem);
 										_lootholder addBackpackCargoGlobal [_loot, 1];

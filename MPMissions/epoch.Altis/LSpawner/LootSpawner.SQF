@@ -2,6 +2,7 @@
 //	Author: Na_Palm (BIS forums)
 //	credit to: Ed! (404Forums) and [GoT] JoSchaap (GoT2DayZ.nl) for initial script
 //-------------------------------------------------------------------------------------
+if (!isServer) exitwith {};
 private["_buildingname","_chfullfuel","_chperSpot","_class","_dbgloopTime","_dbgloopTimeplU","_dbgTime","_dbgTurns","_dbgTurnsplU","_endloop","_genZadjust","_hndl","_item","_nearLootdist","_pos","_posAdjustZ","_posAdjustZlist","_poscount","_posIdxlist","_posnew","_posOrg","_posViable","_randomweapontestint","_spawnradius","_spInterval","_testpos","_tmpBuild","_tmpPoslist","_tmpTstPlace","_z"];
 //-------------------------------------------------------------------------------------
 //Switch
@@ -14,7 +15,7 @@ swSpZadjust = false;				//needed for ArmA 2 and older Maps/Buildings -> true
 _spawnradius = 80;					//Radius (in meter) around players to spawn loot
 _spInterval = 1800;					//Time (in sec.) to pass before an building spawns new loot
 _chfullfuel = 35;					//Chance (in %) of a spawned fuelcan to be full instead of empty
-_genZadjust = -0.1;					//High adjustment (in engine units) thats generally added to every spawnpoint
+_genZadjust = -0.2;					//High adjustment (in engine units) thats generally added to every spawnpoint
 _tmpTstPlace = [14730, 16276, 0];	//Coord's, in [x,y,z] of a preferably flat and unocupied piece of land
 _chperSpot = 75;					//Chance (in %) if a spot gets loot. Will be considered before 'spawnClassChance_list'
 
@@ -27,10 +28,13 @@ _chperSpot = 75;					//Chance (in %) if a spot gets loot. Will be considered bef
 //									%object 	: % chance to spawn an world object on spot
 //-------------- A VALUE OF '-1' RESULTS IN NO LOOT FOR THIS CLASS AND TYPE ----------------
 spawnClassChance_list = [
-[0, 13, 21, 24, 18, 22],	// civil
-[1, 22, 36, 28, 26, 18],	// military
-[2, 10, 21, 28, 26, 36],	// industrial
-[3, 12, 36, 36, -1, -1]		// research
+[0, 5, 5, 24, 18, -1],  // civil
+[1, 22, 36, 28, 26, -1],	// military
+[2, 5, 5, 40, 26, -1],	// industrial
+[3, 12, 36, 36, -1, -1],  // research
+[4, -1, -1, 50, -1, -1],	// medical
+[5, -1, -1, 50, -1, -1],  // food
+[6, -1, -1, 28, -1, -1] 	// hangars
 ];
 
 //"exclcontainer_list" single array of container classnames to NOT to delete if filled
@@ -47,7 +51,7 @@ exclcontainer_list = [
 //DONT change these, will be filled in MAIN -------------------------------------------
 spawnBuilding_list = [];
 Buildingpositions_list = [];
-LSusedclass_list = ["GroundWeaponHolder"];
+LSusedclass_list = ["WeaponHolderSimulated"];
 //DONT change these, will be filled in MAIN -------------------------------------------
 //-------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------
@@ -197,31 +201,33 @@ if ((count Buildingstoloot_list) == 0) then {
 	//go into mainloop till mission ends
 	while {true} do {
 		_playersalive = false;
-		if (swDebugLS) then {
-			dbgTimeplU = time;
-		};
-		//is Player online and alive?
-		if (alive player) then {
-			_playersalive = true;
-			//jogging has 4.16..., sprinting has 5.5... so if player velocity is < 6 spawn loot
-			//works for players in vehicles too
-			if (((velocity player) distance [0,0,0]) < 6) then {
-			//if ((vehicle _x isKindOf "Land") || (vehicle _x isKindOf "Ship")) then {
-				_posPlayer = getPos player;
-				//get list of viable buildings around player
-				_BaP_list = nearestObjects [_posPlayer, spawnBuilding_list, _spawnradius];
-				if ((count _BaP_list) > 0) then {
-					//give to spawn function
-					_hndl = [_BaP_list, _spInterval, _chfullfuel, _genZadjust, _chperSpot] spawn fn_getBuildingstospawnLoot;
-					waitUntil{scriptDone _hndl};
+		{
+			if (swDebugLS) then {
+				dbgTimeplU = time;
+			};
+			//is Player online and alive?
+			if ((isPlayer _x) && (alive _x)) then {
+				_playersalive = true;
+				//jogging has 4.16..., sprinting has 5.5... so if player velocity is < 6 spawn loot
+				//works for players in vehicles too
+				if (((velocity _x) distance [0,0,0]) < 6) then {
+				//if ((vehicle _x isKindOf "Land") || (vehicle _x isKindOf "Ship")) then {
+					_posPlayer = getPos _x;
+					//get list of viable buildings around player
+					_BaP_list = nearestObjects [_posPlayer, spawnBuilding_list, _spawnradius];
+					if ((count _BaP_list) > 0) then {
+						//give to spawn function
+						_hndl = [_BaP_list, _spInterval, _chfullfuel, _genZadjust, _chperSpot] spawn fn_getBuildingstospawnLoot;
+						waitUntil{scriptDone _hndl};
+					};
 				};
 			};
-		};
-		sleep 0.001;
-		if (swDebugLS) then {
-			dbgloopTimeplU = dbgloopTimeplU + (time - dbgTimeplU);
-			dbgTurnsplU = dbgTurnsplU + 1;
-		};
+			sleep 0.001;
+			if (swDebugLS) then {
+				dbgloopTimeplU = dbgloopTimeplU + (time - dbgTimeplU);
+				dbgTurnsplU = dbgTurnsplU + 1;
+			};
+		}forEach playableUnits;
 		if (swDebugLS) then {
 			dbgloopTime = dbgloopTime + dbgloopTimeplU;
 			dbgloopTimeplU	= 0;

@@ -1,10 +1,13 @@
 #include "A3EAI_Client\A3EAI_initclient.sqf"
 
-#include "LSlootBuildings.sqf"
-#include "LSlootLists.sqf"
-#include "LSLootLists_HighLoot.SQF"
-
 if(hasInterface)then{execVM "semClient.sqf"};
+
+if (isServer) then 
+{
+	fn_getBuildingstospawnLoot = compile preProcessFileLineNumbers "LSpawner\fn_LSgetBuildingstospawnLoot.sqf"; 
+	LSdeleter = compile preProcessFileLineNumbers "LSpawner\LSdeleter.sqf";
+	execVM "LSpawner\Lootspawner.sqf";
+};
 
 if (!isDedicated) then {
 	"VEMFChatMsg" addPublicVariableEventHandler {
