@@ -1,10 +1,10 @@
-//    Lootspawner junction list for buildings to classes
-//    Author: Na_Palm (BIS forums)
+//	Lootspawner junction list for buildings to classes
+//	Author: Na_Palm (BIS forums)
 //-------------------------------------------------------------------------------------
 //"Buildingstoloot_list" array of [buildingname, class]
-//                                buildingname:     building class name (in editor debug console use "typeof BIS_fnc_camera_target"
-//                                                to monitor and then copy/paste or any other method you know...)
-//                                class:             0-civil, 1-military, ... (add more as you wish)
+//								buildingname: 	building class name (in editor debug console use "typeof BIS_fnc_camera_target"
+//												to monitor and then copy/paste or any other method you know...)
+//								class: 			0-civil, 1-military, ... (add more as you wish)
 //
 //!!!EVERY building must have only ONE entry here AND been in ONE class!!!
 //-------------------------------------------------------------------------------------
@@ -63,19 +63,5 @@ Buildingstoloot_list = [
 ["Land_SS_hangar", 1],
 ["Land_stodola_old_open", 0],
 ["Land_Tovarna2", 2],
-["Land_vez", 1],
-
-//custom buildings
-["Land_Airport_left_F", 0],
-["Land_Airport_center_F", 0],
-["Land_Airport_right_F", 0],
-["Land_i_Barracks_V1_F", 1],
-["Land_i_Barracks_V2_F", 1],
-["Land_Cargo_Tower_V1_F", 1],
-["Land_Airport_Tower_F", 1],
-["Land_Mil_Barracks_i_EP1", 1],
-["Land_MilOffices_V1_F", 1],
-["C130J_wreck_EP1", 1],
-["Land_Offices_01_V1_F", 0]
-
+["Land_vez", 1]
 ];
